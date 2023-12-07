@@ -9,13 +9,13 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>userRegistration-domain</module>
-        <module>userRegistration-persistence-api</module>
-        <module>userRegistration-persistence-in-mariadb</module>
-        <module>userRegistration-services-api</module>
-        <module>userRegistration-services</module>
-        <module>userRegistration-web-ui</module>
         <module>Liquibase</module>
+        <module>Reg-domain</module>
+        <module>Persistence-api</module>
+        <module>Persistence-in-mariadb</module>
+        <module>Services-api</module>
+        <module>Services</module>
+        <module>Web-ui</module>
     </modules>
 
     <properties>

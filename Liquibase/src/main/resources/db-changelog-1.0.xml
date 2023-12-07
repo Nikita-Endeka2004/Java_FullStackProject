@@ -4,19 +4,22 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-   <changeSet id="Creating users" author="Dilxevia">
+    <changeSet id="Creating users" author="Dilxevia">
         <createTable tableName="users">
-            <column autoIncrement="true" name="userid" type="int">
+            <column autoIncrement="true" name="user_id" type="int">
                 <constraints primaryKey="true" nullable="false" />
             </column>
-            <column name="surname" type="varchar(50)">
+            <column name="nickname" type="varchar(50)">
                 <constraints nullable="false" />
             </column>
             <column name="name" type="varchar(50)">
                 <constraints nullable="false" />
             </column>
-            <column name="gender" type="varchar(50)">
-                <constraints nullable="false" />
+            <column name="wallet" type="int">
+                <constraints nullable="true" />
+            </column>
+            <column name="isBlocked" type="bool">
+                <constraints nullable="true" />
             </column>
             <column name="email" type="varchar(50)">
                 <constraints nullable="false" />
@@ -26,43 +29,94 @@
             </column>
         </createTable>
     </changeSet>
-
-    <changeSet id="Creating author" author="Dilxevia">
-        <createTable tableName="authors">
-            <column autoIncrement="true" name="author_id" type="int">
-                <constraints primaryKey="true" nullable="false"/>
+    <changeSet id="Creating followings" author="Dilxevia">
+        <createTable tableName="followings">
+            <column autoIncrement="true" name="followings_id" type="int">
+                <constraints primaryKey="true" nullable="false" />
             </column>
-            <column name="first_name" type="varchar(50)">
+            <column name="name" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="last_name" type="varchar(50)">
+            <column name="cost" type="int">
                 <constraints nullable="false"/>
             </column>
-        </createTable>
-    </changeSet>
-    <changeSet id="Creating books" author="Dilxevia">
-        <createTable tableName="books">
-            <column autoIncrement="true" name="book_id" type="int">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="title" type="varchar(50)">
+            <column name="description" type="varchar(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="author_id" type="int">
+            <column name="user_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="publishing_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tags" type="varchar(512)">
                 <constraints nullable="false"/>
             </column>
             <column name="published_year" type="int">
-                <constraints nullable="false"/>
+                <constraints nullable="false" />
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="add-fk-between-authors-and-books" author="Dilxevia">
+    <changeSet id="Creating publishing" author="Dilxevia">
+        <createTable tableName="publishings">
+            <column autoIncrement="true" name="publishing_id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cost" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tags" type="varchar(512)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="published_year" type="int">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="Dilxevia" id="adding publishing">
+        <insert catalogName="webusers"
+                tableName="publishings">
+            <column name="publishing_id" type="int">1</column>
+            <column name="name" type="varchar(50)">The New York Times</column>
+            <column name="cost" type="int">50</column>
+            <column name="tags" type="varchar(512)">news stars daily</column>
+            <column name="description" type="varchar(1024)">In a new interview with the Audacy Check In podcast, the pop star opened up about purchasing the publishing rights to her own catalog from its previous owner, TAP Music.</column>
+            <column name="published_year" type="int">1945</column>
+        </insert>
+        <insert catalogName="webusers"
+                tableName="publishings">
+            <column name="publishing_id" type="int">2</column>
+            <column name="name" type="varchar(50)">The Daily</column>
+            <column name="cost" type="int">45</column>
+            <column name="tags" type="varchar(512)">news environment humans</column>
+            <column name="description" type="varchar(1024)">In a new interview with the Audacy Check In podcast, the pop star opened up about purchasing the publishing rights to her own catalog from its previous owner, TAP Music.</column>
+            <column name="published_year" type="int">1947</column>
+        </insert>
+    </changeSet>
+    <changeSet id="add-fk-between-followings-and-publishing" author="Dilxevia">
         <addForeignKeyConstraint
-                baseTableName="books"
-                baseColumnNames="author_id"
-                constraintName="fk_book_author"
-                referencedTableName="authors"
-                referencedColumnNames="author_id"
+                baseTableName="followings"
+                baseColumnNames="publishing_id"
+                constraintName="fk_followings_publishing"
+                referencedTableName="publishings"
+                referencedColumnNames="publishing_id"
+                onDelete="CASCADE"
+                onUpdate="CASCADE"
+        />
+    </changeSet>
+    <changeSet id="add-fk-between-followings-and-user" author="Dilxevia">
+        <addForeignKeyConstraint
+                baseTableName="followings"
+                baseColumnNames="user_id"
+                constraintName="fk_followings_user"
+                referencedTableName="users"
+                referencedColumnNames="user_id"
                 onDelete="CASCADE"
                 onUpdate="CASCADE"
         />
